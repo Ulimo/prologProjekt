@@ -25,40 +25,57 @@ parseLines([H|T], K, O) :-
     %! split_string(H, " ,", "", V1),
     %! getAtomics(V1, K1),
     splitString(H, [], [], K1),
-    parseLines(T, [K1|K], O).
+    addList(T, K1, K, O).
+    %! parseLines(T, [K1|K], O).
+    
+addList(T, [], A, O) :-
+    parseLines(T, A, O).
+addList(T, L, A, O) :-
+    parseLines(T, [L|A], O).
 
 splitString([], [], A2, O) :-
     reverse(A2, O).
 splitString([], A1, A2, O) :-
-    reverse(A1, O1),
-    A3 = [(ord,O1)|A2],
-    reverse(A3, O).
+    checkSection([], A1, A2, O).
+     %! reverse(A1, O1),
+     %! atom_codes(OrdAtom, O1),
+     %! A3 = [(ord,OrdAtom)|A2],
+     %! reverse(A3, O).
 splitString([H|T], A1, A2, O) :-
     H == 34, %! Qoute sign
     readQoutes(T, [H|A1], A2, O). %! Start reading quotes
 
 
 splitString([H|T], [], A2, O) :-
-    H == 32,
+    H == 32, %! Blankspace
     splitString(T, [], A2, O).
 splitString([H|T], A1, A2, O) :-
-    H == 32,
+    H == 32, %! Blankspace
     reverse(A1, A1Reverse),
     atom_codes(OrdAtom, A1Reverse),
     splitString(T, [], [(ord, OrdAtom)|A2], O).
 
 
 splitString([H|T], [], A2, O) :-
-    H == 44,
+    H == 46, %! Dot, punkt .
     splitString(T, [], A2, O).
 splitString([H|T], A1, A2, O) :-
-    H == 44,
+    H == 46, %! Dot, punkt .
     reverse(A1, A1Reverse),
     atom_codes(OrdAtom, A1Reverse),
     splitString(T, [], [(ord, OrdAtom)|A2], O).
 
 splitString([H|T], [], A2, O) :-
-    H == 59,
+    H == 44, %! Comma
+    splitString(T, [], A2, O).
+splitString([H|T], A1, A2, O) :-
+    H == 44, %! Comma
+    reverse(A1, A1Reverse),
+    atom_codes(OrdAtom, A1Reverse),
+    splitString(T, [], [(ord, OrdAtom)|A2], O).
+
+splitString([H|T], [], A2, O) :-
+    H == 59, %! Semicolon
     readComments([H|T], [], A2, O).
 splitString([H|T], A1, A2, O) :- %! Handles comments in assembler
     H == 59, %! semicolon
@@ -112,6 +129,17 @@ splitStringTemporary([H|T], A, O, [H|T]) :-
 splitStringTemporary([H|T], A, O, G) :-
     splitStringTemporary(T, [H|A], O, G).
 
+checkSection(L, [H|T], A2, O) :-
+    H == 58,
+    reverse(T, Reverse),
+    atom_codes(OrdAtom, Reverse),
+    splitString(L, [], [(section, OrdAtom)|A2], O).
+checkSection(L, A1, A2, O)
+    reverse(A1, O1),
+    atom_codes(OrdAtom, O1),
+    splitString(L, [], [(ord, OrdAtom)|A2], O).
+    %! A3 = [(ord,OrdAtom)|A2],
+    %! reverse(A3, O).
 
 getAtomics([], []).
 getAtomics([H|T], K) :- H == "", getAtomics(T, K).
