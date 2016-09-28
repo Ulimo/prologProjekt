@@ -1,6 +1,7 @@
 :- use_module(readfile).
+:- use_module(grammar).
 
 main(O) :-
     readfile('ass.txt', O1),
-    reverse(O1, O).
+    grammar(O1, O).
     %! writeToFile(O).
