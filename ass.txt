@@ -1,4 +1,11 @@
-    add %sum, b, %sum ; lägger ihop två stycken värden
+;segment .data
+;string db "Hello world!", 0Ah, 0h
 
-add %t1, %t2
-mov %t2, %t1
+;segment .text
+
+
+main:
+;    add %sum, b, %sum ; lägger ihop två stycken värden
+
+;add %t1, %t2
+;mov %t2, %t1
