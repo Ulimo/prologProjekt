@@ -1,4 +1,4 @@
-add %variAbel1, %b, %a ; lägger ihop två stycken värden
+    add %sum, b, %sum ; lägger ihop två stycken värden
 
 add %t1, %t2
 mov %t2, %t1
