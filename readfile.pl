@@ -19,8 +19,8 @@ parseLines(Ls, K) :-
     parseLines(Ls, [], K).
 
 parseLines([], O, O).
-%! parseLines([[]|T], K, O) :- 
-%!    parseLines(T, K, O).
+ parseLines([[]|T], K, O) :- 
+    parseLines(T, K, O).
 parseLines([H|T], K, O) :-
     %! split_string(H, " ,", "", V1),
     %! getAtomics(V1, K1),
@@ -37,6 +37,26 @@ splitString([H|T], A1, A2, O) :-
     H == 34, %! Qoute sign
     readQoutes(T, [H|A1], A2, O). %! Start reading quotes
 
+
+splitString([H|T], [], A2, O) :-
+    H == 32,
+    splitString(T, [], A2, O).
+splitString([H|T], A1, A2, O) :-
+    H == 32,
+    reverse(A1, A1Reverse),
+    atom_codes(OrdAtom, A1Reverse),
+    splitString(T, [], [(ord, OrdAtom)|A2], O).
+
+
+splitString([H|T], [], A2, O) :-
+    H == 44,
+    splitString(T, [], A2, O).
+splitString([H|T], A1, A2, O) :-
+    H == 44,
+    reverse(A1, A1Reverse),
+    atom_codes(OrdAtom, A1Reverse),
+    splitString(T, [], [(ord, OrdAtom)|A2], O).
+
 splitString([H|T], [], A2, O) :-
     H == 59,
     readComments([H|T], [], A2, O).
@@ -52,7 +72,8 @@ splitString([H|T], A1, A2, O) :-
     H == 37, 
     splitStringTemporary(T, [], OT, R), %! get one word
     reverse(A1, A1Reverse),
-    splitString(R, [], [OT, (ord,A1Reverse)|A2], O). %! continue to split the split on the rest of the words
+    atom_codes(OrdAtom, A1Reverse),
+    splitString(R, [], [OT, (ord,OrdAtom)|A2], O). %! continue to split the split on the rest of the words
 splitString([H|T], A1, A2, O) :-
     splitString(T, [H|A1], A2, O).
     
@@ -68,8 +89,8 @@ readQoutes([H|T], A1, A2, O) :-
 
 readComments([], A1, A2, O) :-
     reverse(A1, O1),
-    A3 = [(com,O1)|A2],
-    reverse(A3, O).
+    %!    A3 = [(com,O1)|A2],
+    reverse(A2, O).
 readComments([H|T], A1, A2, O) :-
     readComments(T, [H|A1], A2, O).
 
@@ -95,6 +116,7 @@ splitStringTemporary([H|T], A, O, G) :-
 getAtomics([], []).
 getAtomics([H|T], K) :- H == "", getAtomics(T, K).
 getAtomics([H|T], K) :- getAtomics(T, K1), atom_codes(H1, H), append([H1], K1, K).
+
 
 
 writeToFile(Lines) :-

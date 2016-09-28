@@ -2,5 +2,5 @@
 
 main(O) :-
     readfile('ass.txt', O1),
-    reverse(O1, O),
-    writeToFile(O).
+    reverse(O1, O).
+    %! writeToFile(O).
