@@ -3,9 +3,9 @@
 
 ;segment .text
 
+global main
+main: ; asd
+addi %sum, %sum, 1 ; lägger ihop två stycken värden
 
-main:
-;    add %sum, b, %sum ; lägger ihop två stycken värden
-
-;add %t1, %t2
-;mov %t2, %t1
+add %t1, %t2
+mov %t2, %t1

@@ -36,11 +36,12 @@ addList(T, L, A, O) :-
 splitString([], [], A2, O) :-
     reverse(A2, O).
 splitString([], A1, A2, O) :-
-    checkSection([], A1, A2, O).
-     %! reverse(A1, O1),
-     %! atom_codes(OrdAtom, O1),
-     %! A3 = [(ord,OrdAtom)|A2],
-     %! reverse(A3, O).
+    checkSection(A1, A2, OutputSection),
+    reverse([OutputSection|A2], O).
+    %! reverse(A1, O1),
+    %! atom_codes(OrdAtom, O1),
+    %! A3 = [(ord,OrdAtom)|A2],
+    %! reverse(A3, O).
 splitString([H|T], A1, A2, O) :-
     H == 34, %! Qoute sign
     readQoutes(T, [H|A1], A2, O). %! Start reading quotes
@@ -51,9 +52,10 @@ splitString([H|T], [], A2, O) :-
     splitString(T, [], A2, O).
 splitString([H|T], A1, A2, O) :-
     H == 32, %! Blankspace
-    reverse(A1, A1Reverse),
-    atom_codes(OrdAtom, A1Reverse),
-    splitString(T, [], [(ord, OrdAtom)|A2], O).
+    checkSection(A1, A2, OutputSection),
+    %! reverse(A1, A1Reverse),
+    %! atom_codes(OrdAtom, A1Reverse),
+    splitString(T, [], [OutputSection|A2], O).
 
 
 splitString([H|T], [], A2, O) :-
@@ -79,8 +81,9 @@ splitString([H|T], [], A2, O) :-
     readComments([H|T], [], A2, O).
 splitString([H|T], A1, A2, O) :- %! Handles comments in assembler
     H == 59, %! semicolon
-    reverse(A1, O1),
-    readComments([H|T], [], [(ord,O1)|A2], O).
+    checkSection(A1, A2, OutputSection),
+    %! reverse(A1, O1),
+    readComments([H|T], [], [OutputSection|A2], O).
 splitString([H|T], [], A2, O) :-
     H == 37, 
     splitStringTemporary(T, [], OT, R), %! get one word
@@ -129,15 +132,17 @@ splitStringTemporary([H|T], A, O, [H|T]) :-
 splitStringTemporary([H|T], A, O, G) :-
     splitStringTemporary(T, [H|A], O, G).
 
-checkSection(L, [H|T], A2, O) :-
+checkSection([H|T], A2, O) :-
     H == 58,
     reverse(T, Reverse),
     atom_codes(OrdAtom, Reverse),
-    splitString(L, [], [(section, OrdAtom)|A2], O).
-checkSection(L, A1, A2, O)
+    O = (label, OrdAtom).
+    %! splitString(L, [], [(label, OrdAtom)|A2], O).
+checkSection(A1, A2, O) :-
     reverse(A1, O1),
     atom_codes(OrdAtom, O1),
-    splitString(L, [], [(ord, OrdAtom)|A2], O).
+    O = (ord, OrdAtom).
+    %! splitString(L, [], [(ord, OrdAtom)|A2], O).
     %! A3 = [(ord,OrdAtom)|A2],
     %! reverse(A3, O).
 
