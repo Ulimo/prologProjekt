@@ -1,11 +1,11 @@
-;segment .data
-;string db "Hello world!", 0Ah, 0h
-
-;segment .text
-
-global main
-main: ; asd
-addi %sum, %sum, 1 ; lägger ihop två stycken värden
-
-add %t1, %t2
-mov %t2, %t1
+addi %m, %m, 0 ; m, v, s
+addi %v, %v, 0 ; v, s
+addi %r, %v, 0 ; v, s, r
+addi %m, %r, 0  ; r, m, v, s
+addi %s, %s, 0 ; r, m, v, s
+addi %v, %v, 0 ; r, s, m, v
+addi %x, %m, 0 ; r, s, m, x
+addi %m, %s, 0 ; r, s, m
+addi %r, %r, 1 ; r
+add %s, %s, %x ; r, s, x
+addi %k, %k, 0

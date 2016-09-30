@@ -1,7 +1,10 @@
 :- use_module(readfile).
 :- use_module(grammar).
+:- use_module(liveness).
 
 main(O) :-
-    readfile('ass.txt', O1),
-    grammar(O1, O).
+    readfile('ass.txt', OutputRead),
+    grammar(OutputRead, OutputGrammar),
+    buildLiveness(OutputGrammar, O).
+    
     %! writeToFile(O).
