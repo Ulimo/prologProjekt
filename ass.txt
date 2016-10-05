@@ -1,11 +1,5 @@
-addi %m, %m, 0 ; m, v, s
-addi %v, %v, 0 ; v, s
-addi %r, %v, 0 ; v, s, r
-addi %m, %r, 0  ; r, m, v, s
-addi %s, %s, 0 ; r, m, v, s
-addi %v, %v, 0 ; r, s, m, v
-addi %x, %m, 0 ; r, s, m, x
-addi %m, %s, 0 ; r, s, m
-addi %r, %r, 1 ; r
-add %s, %s, %x ; r, s, x
+;addi %m, $zero, 0
+addi %m, %m, 0
 addi %k, %k, 0
+addi %k, %k, 1
+addi %k, %m, 0
