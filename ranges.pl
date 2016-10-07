@@ -7,21 +7,22 @@ buildRanges(List, Output) :-
     printFile(OutputBuild, "ranges.txt"),
     Output = OutputBuild.
 
-buildRange(List, [], A, A).
+buildRange(List, [], A, Output) :-
+    flatten(A, Output).
 buildRange(List, [H|T], A, Output) :-
     find(List, H, FindOutput),
-    createTuples(FindOutput, [], Tuples),
-    buildRange(List, T, [(H,Tuples)|A], Output).
+    createTuples(H, FindOutput, [], Tuples),
+    buildRange(List, T, [Tuples|A], Output).
 
 find(List, Var, Output) :-
     findStart(List, Var, 0, [], Output).
     %! findRangeNew(List, Var, 0, 0, [], Output).
 
 
-createTuples([], A, Output) :-
+createTuples(Var,[], A, Output) :-
     reverse(A, Output).
-createTuples([H1, H2|T], A, Output) :-
-    createTuples(T, [(H1, H2)|A], Output).
+createTuples(Var, [H1, H2|T], A, Output) :-
+    createTuples(Var, T, [(Var, H1, H2)|A], Output).
     
 findStart([], Var, Index, A, Output) :-
     reverse(A, Output).
@@ -52,31 +53,7 @@ findRange([H|T], Var, Index, A, Output) :-
     findStart(T, Var, K, [Old|A], Output).
 
 
-findRangeNew([], Var, Index, 0, A, Output) :-
-    reverse(A, Output).
-findRangeNew([], Var, Index, 1, A, Output) :-
-    Old is Index - 1,
-    reverse([Old|A], Output).
-findRangeNew([H|T], Var, Index, 0, A, Output) :-
-    memberchk((_, Var), H),
-    K is Index + 1,
-    findRangeNew(T, Var, K, 1, [Index|A], Output).
-findRangeNew([H|T], Var, Index, 1, A, Output) :-
-    memberchk((s, Var), H),
-    K is Index + 1,
-    findRangeNew(T, Var, K, 1, A, Output).
-findRangeNew([H|T], Var, Index, 1, A, Output) :-
-    memberchk((d, Var), H),
-    Old is Index - 1,
-    K is Index + 1,
-    findRangeNew(T, Var, K, 1, [Index,Old|A], Output).
-findRangeNew([H|T], Var, Index, 1, A, Output) :-
-    Old is Index - 1,
-    K is Index + 1,
-    findRangeNew(T, Var, K, 0, [Old|A], Output).
-findRangeNew([H|T], Var, Index, 0, A, Output) :- %! No variable here, continue to iterate
-    K is Index + 1,
-    findRangeNew(T, Var, K, 0, A, Output).
+
     
     
 printFile(List, File) :-
@@ -85,15 +62,19 @@ printFile(List, File) :-
 
 printFileInternal([], OS) :-
     close(OS).
-printFileInternal([(V,H)|T], OS) :-
+printFileInternal([(V, R1, R2)|T], OS) :-
+    write(OS, "("),
     write(OS, V),
-    write(OS, ": "),
-    printFileLine(H, OS),
+    write(OS, ", "),
+    write(OS, R1),
+    write(OS, ", "),
+    write(OS, R2),
+    write(OS, ") "),
     write(OS, "\n"), %! add a new line
     printFileInternal(T, OS).
 
 printFileLine([], OS).
-printFileLine([(R1,R2)|T], OS) :-
+printFileLine([(R1,R2,R3)|T], OS) :-
     write(OS, "("),
     write(OS, R1),
     write(OS, ", "),
