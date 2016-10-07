@@ -52,3 +52,71 @@ xor(A,B,S) :- nand(A,B,V1), nand(A,V1,V2), nand(B,V1,V3), nand(V2,V3,S).
 and(A,B,S) :- nand(A,B,V1), nand(V1,V1,S).
 
 
+sentence --> noun_phrase, verb_phrase.
+noun_phrase --> [the], noun.
+verb_phrase --> [runs].
+noun --> [rabbit].
+noun --> [engine].
+
+expr(X) -->
+    term(Y),
+    [+],
+    expr(Z),
+    {X is Y + Z}.
+expr(X) -->
+    term(Y), 
+    [-], expr(Z), 
+    {X is Y-Z}.
+expr(X) --> 
+    term(X).
+
+term(X) --> 
+    factor(Y), 
+    [*], 
+    term(Z), 
+    {X is Y*Z}.
+term(X) --> 
+    factor(Y),
+    [/], 
+    term(Z), 
+    {X is Y/Z}.
+term(X) --> 
+    factor(X).
+factor(X) --> 
+    [X], 
+    {integer(X)}.
+
+
+%! expr(X, [2, *, 2, +, 4, *, 4], []).
+
+
+test(O) :-
+    O = alex.
+    
+    
+    
+findRangeNew([], Var, Index, 0, A, Output) :-
+    reverse(A, Output).
+findRangeNew([], Var, Index, 1, A, Output) :-
+    Old is Index - 1,
+    reverse([Old|A], Output).
+findRangeNew([H|T], Var, Index, 0, A, Output) :-
+    memberchk((_, Var), H),
+    K is Index + 1,
+    findRangeNew(T, Var, K, 1, [Index|A], Output).
+findRangeNew([H|T], Var, Index, 1, A, Output) :-
+    memberchk((s, Var), H),
+    K is Index + 1,
+    findRangeNew(T, Var, K, 1, A, Output).
+findRangeNew([H|T], Var, Index, 1, A, Output) :-
+    memberchk((d, Var), H),
+    Old is Index - 1,
+    K is Index + 1,
+    findRangeNew(T, Var, K, 1, [Index,Old|A], Output).
+findRangeNew([H|T], Var, Index, 1, A, Output) :-
+    Old is Index - 1,
+    K is Index + 1,
+    findRangeNew(T, Var, K, 0, [Old|A], Output).
+findRangeNew([H|T], Var, Index, 0, A, Output) :- %! No variable here, continue to iterate
+    K is Index + 1,
+    findRangeNew(T, Var, K, 0, A, Output).

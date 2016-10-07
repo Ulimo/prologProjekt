@@ -1,5 +1,7 @@
 ;addi %m, $zero, 0
-addi %m, %m, 0
+
+addi %m, %b, 0
 addi %k, %k, 0
 addi %k, %k, 1
 addi %k, %m, 0
+addi %k, %k, 0

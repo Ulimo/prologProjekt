@@ -1,3 +1,5 @@
+%! Lexer
+
 :- module(readfile, [readfile/2, tsplit/1, writeToFile/1]).
 
 use_module(library(pio)).
