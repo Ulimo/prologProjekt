@@ -109,8 +109,8 @@ readQoutes([H|T], A1, A2, O) :-
     readQoutes(T, [H|A1], A2, O).
 
 
-readComments([], A1, A2, O) :-
-    reverse(A1, O1),
+readComments([], _, A2, O) :-
+    %! reverse(A1, O1),
     %!    A3 = [(com,O1)|A2],
     reverse(A2, O).
 readComments([H|T], A1, A2, O) :-
@@ -134,13 +134,13 @@ splitStringTemporary([H|T], A, O, [H|T]) :-
 splitStringTemporary([H|T], A, O, G) :-
     splitStringTemporary(T, [H|A], O, G).
 
-checkSection([H|T], A2, O) :-
+checkSection([H|T], _, O) :-
     H == 58,
     reverse(T, Reverse),
     atom_codes(OrdAtom, Reverse),
     O = (label, OrdAtom).
     %! splitString(L, [], [(label, OrdAtom)|A2], O).
-checkSection(A1, A2, O) :-
+checkSection(A1, _, O) :-
     reverse(A1, O1),
     atom_codes(OrdAtom, O1),
     O = (ord, OrdAtom).
@@ -166,11 +166,11 @@ writeToFile([H|T], OS) :-
     writeToFile(T, OS).
     
     
-writeToFileLine([], OS).
+writeToFileLine([], _).
 writeToFileLine([(temp,H)|T], OS) :-
     write(OS, H),
     writeToFileLine(T, OS).
-writeToFileLine([(A,H)|T], OS) :-
+writeToFileLine([(_,H)|T], OS) :-
     string_to_list(String, H),
     write(OS, String),
     writeToFileLine(T, OS).

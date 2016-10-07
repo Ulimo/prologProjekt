@@ -37,24 +37,24 @@ checkBounds(_, [], A, A).
 checkBounds(Var, [Cmp|T], A, Output) :-
     overlap(Var, Cmp),
     checkBounds(Var, T, [(Var, Cmp)|A], Output).
-checkBounds(Var, [B|T], A, Output) :-
+checkBounds(Var, [_|T], A, Output) :-
     checkBounds(Var, T, A, Output).
 
 
 
-overlap((Var, Start, End),(CmpVar, CmpStart, CmpEnd)) :-
+overlap((_, Start, End),(_, CmpStart, _)) :-
     CmpStart >= Start, CmpStart =< End.
-overlap((Var, Start, End),(CmpVar, CmpStart, CmpEnd)) :-
+overlap((_, Start, End),(_, _, CmpEnd)) :-
     CmpEnd >= Start, CmpEnd =< End.
-overlap((Var, Start, End),(CmpVar, CmpStart, CmpEnd)) :-
+overlap((_, Start, End),(_, CmpStart, CmpEnd)) :-
     CmpStart =< Start, CmpEnd >= End.
     
 
 removeUnderDegree(G, Degree, Output) :-
     removeUnderDegree(G, Degree, [], Output). 
 
-removeUnderDegree(Compare, Degree, Compare, Compare). %! Fixed point
-removeUnderDegree((V, E), Degree, Compare, Output) :-
+removeUnderDegree(Compare, _, Compare, Compare). %! Fixed point
+removeUnderDegree((V, E), Degree, _, Output) :-
     filterVertices(V, Degree, [], Cmp),
     removeUnderDegree(Cmp, Degree, (V,E), Output).
     
@@ -75,12 +75,13 @@ printFile((V,E), File) :-
     write(OS, "Vertices: \n"),
     printFileVertices(V, OS),
     write(OS, "\nEdges: \n"),
-    printFileEdges(E, OS).
-
-printFileEdges([], OS) :-
+    printFileEdges(E, OS),
+    write(OS, "\n\n"),
     close(OS).
+
+
     
-printFileVertices([], OS).
+printFileVertices([], _).
 printFileVertices([(V, Degree)|T], OS) :-
     write(OS, "("),
     printFileTuple(V, OS),
@@ -90,6 +91,7 @@ printFileVertices([(V, Degree)|T], OS) :-
     write(OS, "\n"),
     printFileVertices(T, OS).
     
+printFileEdges([], _).
 printFileEdges([(V1, V2)|T], OS) :-
     write(OS, "("),
     printFileTuple(V1, OS),

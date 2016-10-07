@@ -3,7 +3,7 @@
 %! gets a reverse list
 buildLiveness(List, Output) :-
     reverse(List, ListReverse),
-    buildLiveness(ListReverse, [[]], [H|T]),
+    buildLiveness(ListReverse, [[]], [_|T]),
     %! forwardPass(List, T, [], [], ForwardOutput),
     printFile(T, "liveness.txt"),
     Output = T.
@@ -33,11 +33,11 @@ buildLiveness([[(cmdi, _), (desttemp, Destination), (sourcetemp, Source1), (imm,
     
 removeDestination(Destination, List, Output) :-
     delete(List, (d, Destination), Output).
-removeDestination(Destination, List, List).
+removeDestination(_, List, List).
 
 removeSource(Source, List, Output) :-
     delete(List, (s, Source), Output).
-removeSource(Source, List, List).
+removeSource(_, List, List).
 
 
 forwardPass([], [[]], _, A, Output) :-
@@ -60,7 +60,7 @@ removeVariables([], _, A, A).
 removeVariables([(B,H)|T], Defined, A, Output) :-
     memberchk(H, Defined),
     removeVariables(T, Defined, [(B,H)|A], Output).
-removeVariables([(B,H)|T], Defined, A, Output) :-
+removeVariables([_|T], Defined, A, Output) :-
     removeVariables(T, Defined, A, Output).
 
 printFile(List, File) :-
@@ -74,7 +74,7 @@ printFileInternal([H|T], OS) :-
     write(OS, "\n"), %! add a new line
     printFileInternal(T, OS).
 
-printFileLine([], OS).
+printFileLine([], _).
 printFileLine([(d,H)|T], OS) :-
     write(OS, "+"),
     write(OS, H),

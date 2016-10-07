@@ -94,6 +94,12 @@ test(O) :-
     O = alex.
     
     
+gener([],_,[]).
+gener([V|Vs],Colors,[V-C|T]):-
+   member(C,Colors), % non-deterministic generator of colors
+   gener(Vs,Colors,T).
+    
+    
     
 findRangeNew([], Var, Index, 0, A, Output) :-
     reverse(A, Output).
