@@ -9,5 +9,6 @@ main(O) :-
     grammar(OutputRead, OutputGrammar),
     buildLiveness(OutputGrammar, OutputLiveness),
     buildRanges(OutputLiveness, OutputRanges),
-    createGraph(OutputRanges, O).
+    createGraph(OutputRanges, OutputGraph),
+    removeUnderDegree(OutputGraph, 4, O).
     %! writeToFile(O).

@@ -14,10 +14,10 @@ buildLiveness([[(cmd, _), (desttemp, Destination), (sourcetemp, Source1), (sourc
     addDestination(Destination, AH, Ad),
     addSource(Source1, Ad, A2),
     addSource(Source2, A2, A3),
-    %! removeDestination(Destination, A3, A4),
+    removeDestination(Destination, A3, A4),
     %! addSource(Source1, A4, A5),
     %! addSource(Source2, A5, Next),
-    buildLiveness(T, [A3|AT], O).
+    buildLiveness(T, [A4,A3|AT], O).
 buildLiveness([[(cmdi, _), (desttemp, Destination), (sourcetemp, Source1), (imm, _)]|T], [AH|AT], O) :-
     %! removeDestination(Destination, AH, A1),
     addDestination(Destination, AH, A1),

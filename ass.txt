@@ -3,7 +3,7 @@
 
 addi %g, %j, 1
 addi %h, %k, 2
-addi %f, %g, %h
+add %f, %g, %h
 addi %e, %j, 8
 addi %m, %j, 16
 addi %b, %f, 1
