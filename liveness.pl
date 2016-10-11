@@ -3,17 +3,17 @@
 %! gets a reverse list
 buildLiveness(List, Output) :-
     reverse(List, ListReverse),
-    buildLiveness(ListReverse, [[]], [_|T]),
+    buildLiveness2(ListReverse, [[]], [_|T]),
     %! forwardPass(List, T, [], [], ForwardOutput),
     printFile(T, "liveness.txt"),
     Output = T.
     
-    
-buildLiveness([(Cmd, Source, Destination)|T], [AH|AT], O) :-
+buildLiveness2([], A, A).
+buildLiveness2([(Cmd, Source, Destination)|T], [AH|AT], O) :-
     addDestinations(Destination, AH, A1),
     addSources(Source, A1, A2),
     removeDestinations(Destination, A2, A3),
-    buildLiveness(T, [A3,A2|AT], O).
+    buildLiveness2(T, [A3,A2|AT], O).
     
 addDestinations([], A, A).
 addDestinations([H|T], A, O) :-

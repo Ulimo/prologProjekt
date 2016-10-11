@@ -1,14 +1,14 @@
-addi %j, $zero, 0
-addi %g, %j, 1
-addi %h, %k, 2
-add %f, %g, %h
-addi %e, %j, 8
-addi %m, %j, 16
-addi %b, %f, 1
-addi %c, %e, 7
-addi %d, %c, 0
-addi %k, %m, 8
-addi %j, %b, 1   
+addi j, $zero, 0
+addi g, j, 1
+addi h, k, 2
+add f, g, h
+addi e, j, 8
+addi m, j, 16
+addi b, f, 1
+addi c, e, 7
+addi d, c, 0
+addi k, m, 8
+addi j, b, 1   
 
 
 ;add %c, %d,%m

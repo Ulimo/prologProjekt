@@ -1,5 +1,5 @@
-:- use_module(readfile).
-:- use_module(grammar).
+:- use_module(readfile2).
+:- use_module(grammar2).
 :- use_module(liveness).
 :- use_module(ranges).
 :- use_module(graph).
