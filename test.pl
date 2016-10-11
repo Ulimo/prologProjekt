@@ -85,6 +85,40 @@ term(X) -->
 factor(X) --> 
     [X], 
     {integer(X)}.
+    
+abc --> a, b, c.
+a --> [a].
+b --> [b,b].
+c --> [c].
+
+
+
+line(O) --> cmd(K), addToList(X, D, []), addToList(Y, S1, []), addToList(Z, S, S1), {O = (K, S, D)}.
+line(O) --> cmd(K), addToList(X, D, []), addToList(Y, S1, []), {O = (K, S, D)}.
+line(O) --> [sw], addToList(X, S, []), none(Z), {O = (sw, S, [])}.
+line(O) --> [lw], addToList(X, D, []), none(Z), {O = (lw, [], D)}.
+
+cmd(addi) --> [addi].
+cmd(add) --> [add].
+
+none(X) --> [X].
+
+imm(X) --> [X], {atom_number(X, _)}.
+
+
+addToList(X, I, A) --> reg, {I = A, !}.
+%! addToList(X, I, A) --> [X], {atom_number(X, _), I = A, !}.
+addToList(X, I, A) --> [X], {I = [X|A]}.
+
+reg --> ['$zero'].
+
+
+variabel(X) --> [X].
+
+
+abcd(N,M) --> lit(a, N), lit(b,M), lit(c,N), lit(d,M).
+lit(L, 0) --> [].
+lit(L, I) --> [L], lit(L, I1), {I is I1 + 1}.
 
 
 %! expr(X, [2, *, 2, +, 4, *, 4], []).

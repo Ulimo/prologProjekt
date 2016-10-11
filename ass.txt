@@ -1,6 +1,4 @@
-;addi %m, $zero, 0
-
-
+addi %j, $zero, 0
 addi %g, %j, 1
 addi %h, %k, 2
 add %f, %g, %h

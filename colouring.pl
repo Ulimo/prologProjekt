@@ -2,7 +2,8 @@
 
 colour((Vs,Es),Degree,Output):-
     degreeToList(Degree,[],RegisterList),
-    generate(Vs,Es,RegisterList,[],Output).
+    generate(Vs,Es,RegisterList,[],Output),
+    writeFile(Output, "color.txt").
     %! testColouring(Es,Output).
 
 
@@ -35,3 +36,14 @@ testNode(((V,D),C),[(CmpV,V)|TEs],ColVs):-
 
 testNode(V,[_|TEs],ColVs):-
     testNode(V,TEs,ColVs).
+
+writeFile(Input, File) :-
+    open(File,write,OS),
+    writeToFile(Input, OS).
+    
+writeToFile([], OS) :-
+    close(OS).
+writeToFile([Var|T], OS) :-
+    write(OS, Var),
+    write(OS, "\n"),
+    writeToFile(T, OS).
