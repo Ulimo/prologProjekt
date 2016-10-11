@@ -7,6 +7,30 @@ buildLiveness(List, Output) :-
     %! forwardPass(List, T, [], [], ForwardOutput),
     printFile(T, "liveness.txt"),
     Output = T.
+    
+    
+buildLiveness([(Cmd, Source, Destination)|T], [AH|AT], O) :-
+    addDestinations(Destination, AH, A1),
+    addSources(Source, A1, A2),
+    removeDestinations(Destination, A2, A3),
+    buildLiveness(T, [A3,A2|AT], O).
+    
+addDestinations([], A, A).
+addDestinations([H|T], A, O) :-
+    addDestination(H, A, A1),
+    addDestinations(T, A1, O).
+    
+addSources([], A, A).
+addSources([H|T], A, O) :-
+    addSource(H, A, A1),
+    addSources(T, A1, O).
+    
+removeDestinations([], A, A).
+removeDestinations([H|T], A, O) :-
+    removeDestination(H, A, A1),
+    removeDestinations(T, A1, O).
+    
+
 
 buildLiveness([], A, A).
 buildLiveness([[(cmd, _), (desttemp, Destination), (sourcetemp, Source1), (sourcetemp, Source2)]|T], [AH|AT], O) :-
