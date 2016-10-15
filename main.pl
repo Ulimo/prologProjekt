@@ -1,4 +1,4 @@
-:- use_module(readfile2).
+:- use_module(readfile).
 :- use_module(grammar).
 :- use_module(liveness).
 :- use_module(ranges).
@@ -10,18 +10,6 @@
 main(O) :-
     readfile('ass.txt', OutputRead),!,
     allocateRegisters(OutputRead, 3, O).
-    %! grammar(OutputRead, OutputGrammar),
-    %! buildLiveness(OutputGrammar, OutputLiveness).
-    %! buildRanges(OutputLiveness, OutputRanges),
-    %! createGraph(OutputRanges, OutputGraph),!,
-    %! colour(OutputGraph, 3, O).
-    %! spill(OutputLiveness, OutputGraph, OutputRead, OutputSpill),!,
-    %! createOutput(OutputSpill, [], "output1.asm"),
-    %! O = OutputSpill.
-    %! removeUnderDegree(OutputGraph, 3, O).
-    %!,
-    %! createOutput(OutputRead, Allocations, "output.asm").
-    %! colour(OutputGraph, 4, O).
     
 allocateRegisters(OutputRead, RegCount, Output) :-
     grammar(OutputRead, OutputGrammar),
@@ -36,6 +24,7 @@ checkGraph(Graph, RegisterCount, Read, _, Output) :-
     colour(Graph, RegisterCount, Allocations),
     createOutput(Read, Allocations, "output.asm"),
     O = Allocations.
+    
 checkGraph(Graph, RegisterCount, Read, Liveness, Output) :-
     removeUnderDegree(Graph, RegisterCount, SimplifiedGraph),
     spill(Liveness, SimplifiedGraph, Read, RegisterCount, O1),
