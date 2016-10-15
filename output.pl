@@ -1,6 +1,6 @@
 :- module(output, [createOutput/3]).
 :- use_module(registers).
-:- use_module(grammar2).
+:- use_module(grammar).
 
 createOutput(Read, Allocations, File) :-
     open(File,write,OS),

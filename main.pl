@@ -1,5 +1,5 @@
 :- use_module(readfile2).
-:- use_module(grammar2).
+:- use_module(grammar).
 :- use_module(liveness).
 :- use_module(ranges).
 :- use_module(graph).
@@ -9,9 +9,9 @@
 
 main(O) :-
     readfile('ass.txt', OutputRead),!,
-    %!allocateRegisters(OutputRead, O).
-    grammar(OutputRead, OutputGrammar),
-    buildLiveness(OutputGrammar, OutputLiveness).
+    allocateRegisters(OutputRead, O).
+    %! grammar(OutputRead, OutputGrammar),
+    %! buildLiveness(OutputGrammar, OutputLiveness).
     %! buildRanges(OutputLiveness, OutputRanges),
     %! createGraph(OutputRanges, OutputGraph),!,
     %! colour(OutputGraph, 3, O).

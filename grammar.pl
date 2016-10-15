@@ -1,19 +1,39 @@
-:- module(grammar, [grammar/2,statement/2]).
+:- module(grammar, [grammar/2,statement/2, command/1]).
+:- use_module(registers).
 grammar(Ls,O):- grammar(Ls,[],O).
 
 grammar([],O,O).
-grammar([H|T],A,O):-statement(H,H1),grammar(T,[H1|A],O).
+grammar([H|T],A,O):-statement(O1,H,[]),grammar(T,[O1|A],O).
 
-statement([(ord,C),D,S1,S2],[(cmd,C),D1,S11,S21]):-reg_command(C),destinationTmp(D,D1),sourceTmp(S1,S11),sourceTmp(S2,S21).
-statement([(ord,C),D,S,I],[(cmdi,C),D1,S1,I1]):-imm_command(C),destinationTmp(D,D1),sourceTmp(S,S1),immidiate(I,I1).
-statement(Else,Else).
+statement(A)-->reg_command(A).
+statement(A)-->imm_command(A).
+statement(A) --> lw_command(A).
+statement(A) --> sw_command(A).
+
+reg_command(A)-->rcmd(B),addToList(C,D,[]),addToList(E,S1,[]),addToList(F,S,S1),{A = (B,S,D)}.
+imm_command(A)-->icmd(B),addToList(C,D,[]),addToList(E,S,[]),imm(I),{A = (B,S,D)}.
+lw_command(A) --> [ld], addToList(C, D, []), mem(Z), {A = (ld, [], D)}.
+sw_command(A) --> [sw], addToList(C, S, []), mem(Z), {A = (sw, S, [])}.
+
+rcmd(add)-->[add].
+rcmd(sub)-->[sub].
+
+icmd(addi)-->[addi].
+icmd(subi)-->[subi].
+
+lwsw(sw) --> [sw].
+lwsw(ld)-->[ld].
+
+mem(X) --> [X].
+
+addToList(X, O, A) --> reg(Z), {O = A, !}.
+addToList(X, O, A) --> [X], {O = [X|A]}.
+
+reg(X)-->[X], {r(_, X)}.
+
+imm(X)-->[X],{atom_number(X,_)}.
 
 
-reg_command(add).
-reg_command(sub).
-imm_command(subi).
-imm_command(addi).
-
-immidiate((ord,X),(imm,X)).
-sourceTmp((temp,X),(sourcetemp,X)).
-destinationTmp((temp,X),(desttemp,X)).
+command(X) :-
+    command(_, [X], []).
+command(X) --> rcmd(X);icmd(X);lwsw(X).
