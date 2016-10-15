@@ -9,7 +9,3 @@ addi c, e, 7
 addi d, c, 0
 addi k, m, 8
 addi j, b, 1   
-
-
-;add %c, %d,%m
-;add %d, %b,%c

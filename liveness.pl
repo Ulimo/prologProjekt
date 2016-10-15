@@ -13,7 +13,8 @@ buildLiveness2([(Cmd, Source, Destination)|T], [AH|AT], O) :-
     addDestinations(Destination, AH, A1),
     addSources(Source, A1, A2),
     removeDestinations(Destination, A2, A3),
-    buildLiveness2(T, [A3,A2|AT], O).
+    clearUsed(A3, [], A4),
+    buildLiveness2(T, [A4,A2|AT], O).
     
 addDestinations([], A, A).
 addDestinations([H|T], A, O) :-
@@ -29,6 +30,10 @@ removeDestinations([], A, A).
 removeDestinations([H|T], A, O) :-
     removeDestination(H, A, A1),
     removeDestinations(T, A1, O).
+    
+clearUsed([], A, A).
+clearUsed([(S, Var, _)|T], A, O) :-
+    clearUsed(T, [(S,Var, n)|A], O).
     
 
 
@@ -56,11 +61,11 @@ buildLiveness([[(cmdi, _), (desttemp, Destination), (sourcetemp, Source1), (imm,
     %! checkSource(Source2, A).
     
 removeDestination(Destination, List, Output) :-
-    delete(List, (d, Destination), Output).
+    delete(List, (d, Destination, _), Output).
 removeDestination(_, List, List).
 
 removeSource(Source, List, Output) :-
-    delete(List, (s, Source), Output).
+    delete(List, (s, Source, _), Output).
 removeSource(_, List, List).
 
 
@@ -99,19 +104,30 @@ printFileInternal([H|T], OS) :-
     printFileInternal(T, OS).
 
 printFileLine([], _).
-printFileLine([(d,H)|T], OS) :-
+printFileLine([(d,H,u)|T], OS) :-
+    write(OS, "+"),
+    write(OS, "!"),
+    write(OS, H),
+    write(OS, ", "),
+    printFileLine(T, OS).
+printFileLine([(s,H,u)|T], OS) :-
+    write(OS, "!"),
+    write(OS, H),
+    write(OS, ", "),
+    printFileLine(T, OS).
+printFileLine([(d,H,n)|T], OS) :-
     write(OS, "+"),
     write(OS, H),
     write(OS, ", "),
     printFileLine(T, OS).
-printFileLine([(s,H)|T], OS) :-
+printFileLine([(s,H,n)|T], OS) :-
     write(OS, H),
     write(OS, ", "),
     printFileLine(T, OS).
     
 addDestination(Destination, List, Output) :-
     removeSource(Destination, List, O1),
-    Output = [(d,Destination)|O1].
+    Output = [(d,Destination, u)|O1].
     
 addToList(Element, List, Output) :-
     memberchk(Element, List),
@@ -120,12 +136,14 @@ addToList(Element, List, Output) :-
     Output = [Element|List].
 
 
+%! addSource(Source, List, Output) :-
+    %! removeDestination(Source, List, O1),
+    %! removeSource((s, Source, _), O1),
+    %! memberchk((s,Source), O1),
+    %! Output = O1.
 addSource(Source, List, Output) :-
     removeDestination(Source, List, O1),
-    memberchk((s,Source), O1),
-    Output = O1.
-addSource(Source, List, Output) :-
-    removeDestination(Source, List, O1),
-    Output = [(s,Source)|O1]. %! Add tuple with s meaning source, variable has not changed.
+    removeSource(Source, O1, O2),
+    Output = [(s,Source, u)|O2]. %! Add tuple with s meaning source, variable has not changed.
     
 %! calculateRanges(LivenessList, ActiveList, )

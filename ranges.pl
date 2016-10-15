@@ -27,7 +27,7 @@ createTuples(Var, [H1, H2|T], A, Output) :-
 findStart([], _, _, A, Output) :-
     reverse(A, Output).
 findStart([H|T], Var, Index, A, Output) :-
-    memberchk((_, Var), H),
+    memberchk((_, Var, _), H),
     K is Index + 1,
     findRange(T, Var, K, [Index|A], Output).
 findStart([_|T], Var, Index, A, Output) :- %! No variable here, continue to iterate
@@ -39,11 +39,11 @@ findRange([], _, Index, A, Output) :-
     Old is Index - 1,
     reverse([Old|A], Output).
 findRange([H|T], Var, Index, A, Output) :-
-    memberchk((s, Var), H),
+    memberchk((s, Var, _), H),
     K is Index + 1,
     findRange(T, Var, K, A, Output).
 findRange([H|T], Var, Index, A, Output) :-
-    memberchk((d, Var), H),
+    memberchk((d, Var, _), H),
     Old is Index - 1,
     K is Index + 1,
     findRange(T, Var, K, [Index,Old|A], Output).
@@ -92,7 +92,7 @@ createUniqueList([H|T], A, Output) :-
     createUniqueList(T, OutputInner, Output).
     
 createUniqueListInner([], A, A).
-createUniqueListInner([(_,H)|T], A, Output) :-
+createUniqueListInner([(_,H,_)|T], A, Output) :-
     addToList(H, A, L),
     createUniqueListInner(T, L, Output).
     

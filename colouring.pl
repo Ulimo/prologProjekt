@@ -3,14 +3,14 @@
 colour((Vs,Es),Degree,Output):-
     degreeToList(Degree,[],RegisterList),
     generate(Vs,Es,RegisterList,[],Output),
-    writeFile(Output, "color.txt").
-    %! testColouring(Es,Output).
+    %! writeFile(Output, "color.txt").
+    testColouring(Es,Output).
 
 
 generate([],_,_,A,A).
 generate([HVs|TVs],Es, Colors,A, Output):-
     member(C,Colors),
-    testNode((HVs,C),Es,A),
+    %! testNode((HVs,C),Es,A),
     generate(TVs,Es,Colors,[(HVs,C)|A],Output).
 
 degreeToList(0,A,A) :- !.

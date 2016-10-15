@@ -51,7 +51,7 @@ overlap((_, Start, End),(_, CmpStart, CmpEnd)) :-
     
 
 removeUnderDegree(G, Degree, Output) :-
-    removeUnderDegree(G, Degree, [], Output). 
+    removeUnderDegree(G, Degree, [], Output), !. 
 
 removeUnderDegree(Compare, _, Compare, Compare). %! Fixed point
 removeUnderDegree((V, E), Degree, _, Output) :-
