@@ -9,7 +9,7 @@
 
 main(O) :-
     readfile('ass.txt', OutputRead),!,
-    allocateRegisters(OutputRead, O).
+    allocateRegisters(OutputRead, 3, O).
     %! grammar(OutputRead, OutputGrammar),
     %! buildLiveness(OutputGrammar, OutputLiveness).
     %! buildRanges(OutputLiveness, OutputRanges),
@@ -23,12 +23,12 @@ main(O) :-
     %! createOutput(OutputRead, Allocations, "output.asm").
     %! colour(OutputGraph, 4, O).
     
-allocateRegisters(OutputRead, Output) :-
+allocateRegisters(OutputRead, RegCount, Output) :-
     grammar(OutputRead, OutputGrammar),
     buildLiveness(OutputGrammar, OutputLiveness),
     buildRanges(OutputLiveness, OutputRanges),
     createGraph(OutputRanges, OutputGraph),!,
-    checkGraph(OutputGraph, 3, OutputRead, OutputLiveness, Output).
+    checkGraph(OutputGraph, RegCount, OutputRead, OutputLiveness, Output).
     
 checkGraph(Graph, RegisterCount, Read, _, Output) :-
     removeUnderDegree(Graph, RegisterCount, SimplifiedGraph),
@@ -38,6 +38,6 @@ checkGraph(Graph, RegisterCount, Read, _, Output) :-
     O = Allocations.
 checkGraph(Graph, RegisterCount, Read, Liveness, Output) :-
     removeUnderDegree(Graph, RegisterCount, SimplifiedGraph),
-    spill(Liveness, SimplifiedGraph, Read, O1),
+    spill(Liveness, SimplifiedGraph, Read, RegisterCount, O1),
     createOutput(O1, [], "output.asm"),
-    allocateRegisters(O1, Output).
+    allocateRegisters(O1, RegisterCount, Output).

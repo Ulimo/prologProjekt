@@ -17,9 +17,13 @@ sw_command(A) --> [sw], addToList(C, S, []), mem(Z), {A = (sw, S, [])}.
 
 rcmd(add)-->[add].
 rcmd(sub)-->[sub].
+rcmd(mul)-->[mul].
+rcmd(div)-->[div].
 
 icmd(addi)-->[addi].
 icmd(subi)-->[subi].
+icmd(muli)-->[muli].
+icmd(divi)-->[divi].
 
 lwsw(sw) --> [sw].
 lwsw(ld)-->[ld].
