@@ -1,5 +1,6 @@
 :- module(graph, [createGraph/2, removeUnderDegree/3, filterVertices/4]).
 
+%! GRAPH CREATION
 createGraph(Vertices, Output) :-
     open("edges.txt", write, OS),
     close(OS),
@@ -10,7 +11,7 @@ createGraphInternal(Vertices, Output) :-
     createVerticeList(Vertices, Edges, [], VertexList),
     printFile((VertexList, Edges), "edges.txt"),
     Output = (VertexList, Edges).
-    
+     
 
 createVerticeList([], _, A, A).
 createVerticeList([VH|VT], Edges, A, Output) :-
@@ -40,16 +41,14 @@ checkBounds(Var, [Cmp|T], A, Output) :-
 checkBounds(Var, [_|T], A, Output) :-
     checkBounds(Var, T, A, Output).
 
-
-
-overlap((_, Start, End),(_, CmpStart, _)) :-
-    CmpStart >= Start, CmpStart =< End.
-overlap((_, Start, End),(_, _, CmpEnd)) :-
-    CmpEnd >= Start, CmpEnd =< End.
 overlap((_, Start, End),(_, CmpStart, CmpEnd)) :-
-    CmpStart =< Start, CmpEnd >= End.
+    ((CmpStart >= Start, CmpStart =< End);
+    (CmpEnd >= Start, CmpEnd =< End);
+    (CmpStart =< Start, CmpEnd >= End)).
     
+%! END GRAPH CREATION
 
+%! GRAPH SIMPLIFICATION
 removeUnderDegree(G, Degree, Output) :-
     removeUnderDegree(G, Degree, [], Output), !. 
 
@@ -60,15 +59,16 @@ removeUnderDegree((V, E), Degree, _, Output) :-
     
 filterVertices([], _, A, Output) :-
     createGraphInternal(A, Output).
-    %! createEdges(A, [], Edges),
-    %! createVerticeList(A, Edges, [], VertexList),
-    %! Output = (VertexList, Edges).
 filterVertices([(V, Deg)|T], Degree, A, Output) :-
     Deg >= Degree,
     filterVertices(T, Degree, [V|A], Output).
 filterVertices([_|T], Degree, A, Output) :-
     filterVertices(T, Degree, A, Output).
 
+%! END GRAPH SIMPLIFICATION
+
+
+%! PRINT TO FILE
     
 printFile((V,E), File) :-
     open(File,append,OS), %! open the file
