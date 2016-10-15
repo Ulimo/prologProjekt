@@ -43,7 +43,7 @@ printVariables([Var|T], LineIndex, Allocations, OS) :-
 
 
     
-getRegister(Var, Index, [(((Var, Start, End), Degree), Register)|T], Register) :-
+getRegister(Var, Index, [(((Var, Start, End), _), Register)|_], Register) :-
     Index =< End,
     Index >= Start.
 getRegister(Var, Index, [_|T], Output) :-

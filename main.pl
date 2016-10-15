@@ -7,9 +7,9 @@
 :- use_module(output).
 :- use_module(spilling).
 
-main(O) :-
-    readfile('ass.txt', OutputRead),!,
-    allocateRegisters(OutputRead, 3, O).
+main(File, RegCount, O) :-
+    readfile(File, OutputRead),!,
+    allocateRegisters(OutputRead, RegCount, O).
     
 allocateRegisters(OutputRead, RegCount, Output) :-
     grammar(OutputRead, OutputGrammar),
@@ -20,10 +20,10 @@ allocateRegisters(OutputRead, RegCount, Output) :-
     
 checkGraph(Graph, RegisterCount, Read, _, Output) :-
     removeUnderDegree(Graph, RegisterCount, SimplifiedGraph),
-    colour(SimplifiedGraph, RegisterCount, O1),
+    colour(SimplifiedGraph, RegisterCount, _),
     colour(Graph, RegisterCount, Allocations),
     createOutput(Read, Allocations, "output.asm"),
-    O = Allocations.
+    Output = Allocations.
     
 checkGraph(Graph, RegisterCount, Read, Liveness, Output) :-
     removeUnderDegree(Graph, RegisterCount, SimplifiedGraph),

@@ -16,7 +16,6 @@ generate([HVs|TVs],Es, Colors,A, Output):-
     generate(TVs,Es,Colors,[(HVs,C)|A],Output).
 
 testColouring([],_).
-
 testColouring([((V1),(V2))|Te],ColVs):-
     member(((V1,_),C1),ColVs),
     member(((V2,_),C2),ColVs),

@@ -8,7 +8,7 @@ buildLiveness(List, Output) :-
     Output = T.
     
 buildLiveness([], A, A).
-buildLiveness([(Cmd, Source, Destination)|T], [AH|AT], O) :-
+buildLiveness([(_, Source, Destination)|T], [AH|AT], O) :-
     addDestinations(Destination, AH, A1),
     addSources(Source, A1, A2),
     removeDestinations(Destination, A2, A3),
