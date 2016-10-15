@@ -1,4 +1,4 @@
-:- module(grammar, [grammar/2,statement/2, command/1]).
+:- module(grammar, [grammar/2, command/1]).
 :- use_module(registers).
 grammar(Ls,O):- grammar(Ls,[],O).
 
